@@ -9,6 +9,7 @@ public class GhostBehaviour : MonoBehaviour
     [SerializeField] private Transform vessel;
     [SerializeField] private float speed;
     private Tether _tether;
+    [SerializeField] private Hammer selectedHammer;
 
     private void Start()
     {
@@ -22,6 +23,9 @@ public class GhostBehaviour : MonoBehaviour
         Move();
         
         CheckTether();
+
+        if (selectedHammer)
+            SelectObject();
     }
 
     void Move()
@@ -39,5 +43,34 @@ public class GhostBehaviour : MonoBehaviour
         {
             ghost.position = vessel.position + ((ghost.position - vessel.position).normalized * _tether.leashRadius);
         }
+    }
+
+    void SelectObject()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+            selectedHammer.Grab(ghost);
+        
+        if (Input.GetKeyUp(KeyCode.E))
+            selectedHammer.Release(ghost);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (selectedHammer) return;
+        
+        selectedHammer = col.GetComponent<Hammer>();
+        
+        selectedHammer.HighLight();
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.GetComponent<Hammer>() == selectedHammer)
+        {
+            selectedHammer.HighLight(false);
+            selectedHammer.Release(ghost);
+            selectedHammer = null;
+        };
+        
     }
 }

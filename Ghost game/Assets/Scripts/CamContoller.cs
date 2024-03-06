@@ -14,8 +14,6 @@ public class CamContoller : MonoBehaviour
         Vector2 offset = Vector2.zero;
         bool isOutsideRange = false;
         
-        
-        
         if (Math.Abs(focus.position.x - transform.position.x) > followOffset.x)
         {
             
@@ -25,7 +23,7 @@ public class CamContoller : MonoBehaviour
             }
             else
             {
-                offset.x = (transform.position.x - followOffset.x) + focus.position.x;
+                offset.x = (followOffset.x- transform.position.x) + focus.position.x;
             }
             
             isOutsideRange = true;
@@ -39,16 +37,16 @@ public class CamContoller : MonoBehaviour
             }
             else
             {
-                offset.y = (transform.position.y - followOffset.y) + focus.position.y;
+                offset.y = (followOffset.y - transform.position.y) + focus.position.y;
             }
-
+    
             isOutsideRange = true;
         }
-
+    
         if (isOutsideRange)
         {
             transform.position += (Vector3)offset;
         }
-
+    
     }
 }

@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: ghost
+    uniqueID: 4293459489
+    locked: 0
+  - name: obstacles
+    uniqueID: 1901264139
+    locked: 0
