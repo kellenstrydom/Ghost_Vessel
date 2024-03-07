@@ -10,6 +10,7 @@ public class GhostBehaviour : MonoBehaviour
     [SerializeField] private float speed;
     private Tether _tether;
     [SerializeField] private Hammer selectedHammer;
+    [SerializeField] private Door selectedDoor;
 
     private void Start()
     {
@@ -25,7 +26,10 @@ public class GhostBehaviour : MonoBehaviour
         CheckTether();
 
         if (selectedHammer)
-            SelectObject();
+            SelectObject(selectedHammer);
+        else
+            if (selectedDoor)
+                SelectObject(selectedDoor);
     }
 
     void Move()
@@ -45,32 +49,69 @@ public class GhostBehaviour : MonoBehaviour
         }
     }
 
-    void SelectObject()
+    void SelectObject(Hammer hammer)
     {
         if (Input.GetKeyDown(KeyCode.E))
-            selectedHammer.Grab(ghost);
+            hammer.Grab(ghost);
         
-        if (Input.GetKeyUp(KeyCode.E))
-            selectedHammer.Release(ghost);
+        // if (Input.GetKeyUp(KeyCode.E))
+        //     selectedHammer.Release(ghost);
+    }
+    
+    void SelectObject(Door door)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+            door.Grab(ghost);
+        
+        // if (Input.GetKeyUp(KeyCode.E))
+        //     selectedHammer.Release(ghost);
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (selectedHammer) return;
-        
-        selectedHammer = col.GetComponent<Hammer>();
-        
-        selectedHammer.HighLight();
+        if (col.GetComponent<Door>() != null)
+        {
+            if (selectedDoor == col.GetComponent<Door>())
+                selectedDoor.HighLight();
+            
+            if (selectedDoor) return;
+            
+            selectedDoor = col.GetComponent<Door>();
+        }
+
+        if (col.GetComponent<Hammer>() != null)
+        {
+            if (selectedHammer == col.GetComponent<Hammer>())
+                selectedHammer.HighLight();
+            
+            if (selectedHammer) return;
+            
+            selectedHammer = col.GetComponent<Hammer>();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<Hammer>() == selectedHammer)
+        if (other.GetComponent<Hammer>() != null)
         {
-            selectedHammer.HighLight(false);
-            selectedHammer.Release(ghost);
-            selectedHammer = null;
-        };
+            if (other.GetComponent<Hammer>() == selectedHammer)
+            {
+                selectedHammer.HighLight(false);
+                //selectedHammer.Release(ghost);
+                if (!selectedHammer.isGrabbed)
+                    selectedHammer = null;
+            }
+        }
         
+        if (other.GetComponent<Door>() != null)
+        {
+            if (other.GetComponent<Door>() == selectedDoor)
+            {
+                selectedDoor.HighLight(false);
+                //selectedHammer.Release(ghost);
+                if (!selectedDoor.isGrabbed)
+                    selectedDoor = null;
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ public class Hammer : MonoBehaviour
 {
     public HingeJoint2D hinge;
     private Transform ghost;
-    [SerializeField] private bool isGrabbed;
+    public bool isGrabbed;
     
     // Start is called before the first frame update
     
@@ -27,7 +27,7 @@ public class Hammer : MonoBehaviour
 
     void SetAngle()
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float angle = Vector2.Angle(new Vector2(0,-1), ((Vector2)ghost.position-hinge.connectedAnchor).normalized);
         if (angle > 120) angle = 120;
         if (ghost.position.x > hinge.connectedAnchor.x) angle *= -1;
@@ -45,6 +45,12 @@ public class Hammer : MonoBehaviour
 
     public void Grab(Transform ghost)
     {
+        if (isGrabbed)
+        {
+            Release(ghost);
+            return;
+        }
+        
         this.ghost = ghost;
         isGrabbed = true;
     }
