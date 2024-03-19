@@ -105,12 +105,16 @@ public class GhostBehaviour : MonoBehaviour
         
         if (other.GetComponent<Door>() != null)
         {
+            
             if (other.GetComponent<Door>() == selectedDoor)
             {
                 selectedDoor.HighLight(false);
                 //selectedHammer.Release(ghost);
-                if (!selectedDoor.isGrabbed)
-                    selectedDoor = null;
+                if (selectedDoor.isGrabbed)
+                {
+                    selectedDoor.Grab(ghost);
+                }   
+                selectedDoor = null;
             }
         }
     }
